@@ -1,13 +1,11 @@
 import time
 import os
-from dotenv import load_dotenv
 import pickle
 from db_gen import mssg_collection
-load_dotenv()
-
 pickleFIleAddress = 'mssgStorage/msgStg.txt' 
-expiryTime = 24 * 60 * 60 
+expiryTime = 120
 
+# mssg_collection.delete_one({'id' : 2})
 
 def load_messages() : 
     if os.path.exists(pickleFIleAddress) : 
@@ -19,13 +17,13 @@ def save_messages(messages) :
         return pickle.dump(messages,f)
 
 def add_messages(sent_msg_id , original_text, sender_id , sender_name) : 
-    # messages = load_messages()
-    # messages[sent_msg_id] = {
-    #     "original_text" : original_text ,
-    #     "sender_id" : sender_id ,
-    #     "sender_name" : sender_name ,
-    #     "timestamp" : time.time()
-    # }
+    messages = load_messages()
+    messages[sent_msg_id] = {
+        "original_text" : original_text ,
+        "sender_id" : sender_id ,
+        "sender_name" : sender_name ,
+        "timestamp" : time.time()
+    }
     newData = {
         "sent_msg_id" : sent_msg_id,
         "original_text" : original_text ,
@@ -34,16 +32,17 @@ def add_messages(sent_msg_id , original_text, sender_id , sender_name) :
         "timestamp" : time.time()
     }
     mssg_collection.insert_one(newData)
-    # save_messages(messages)
+    save_messages(messages)
 
 def clear_messages () : 
     print('entered the cleanup module')
-    # messages = load_messages()
+    messages = load_messages()
     now = time.time()
-    # messages = { k : v for k,v in messages.items() if ( now - v["timestamp"]) <= expiryTime }
-    msgList = list(mssg_collection.find({}))
-    for msgBody in msgList : 
-        if(now - msgBody['timestamp']) >= expiryTime : 
-            mssg_collection.delete_one({'timestamp' : msgBody['timestamp']})
-            print(f"Message id {msgBody['sent_msg_d']} deleted")
-    # save_messages(messages)
+    messages = { k : v for k,v in messages.items() if ( now - v["timestamp"]) <= expiryTime }
+    d2 = list(mssg_collection.find({}))
+    for msgdict in d2 : 
+        if(now - msgdict['timestamp']) >= expiryTime : 
+            mssg_collection.delete_one({'timestamp' : msgdict['timestamp']})
+            print(f"Message id {msgdict['sent_msg_d']} deleted")
+
+    save_messages(messages)
