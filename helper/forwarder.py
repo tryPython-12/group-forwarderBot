@@ -18,7 +18,7 @@ async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE)
 
     sender_id = sender.id
     sender_name = f'{sender.first_name} {sender.last_name}'.replace('None','')
-    sender_username = {sender.username}
+    # sender_username = {sender.username}
 
     # create formatted text to send
     formatted_mssg = (
