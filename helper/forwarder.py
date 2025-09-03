@@ -46,13 +46,13 @@ async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE)
     if HASHTAG in msg.text : 
         print("Hashtag found")
         if msg.id > lastMsgId : 
-            await context.bot.send_message(
+            bot_sent_res = await context.bot.send_message(
                 chat_id= dest_chat_id ,
                 text= formatted_mssg ,
                 reply_markup=reply_markup,
                 parse_mode= ParseMode.HTML
             )
-            add_messages(msg.id , msg.text , sender_id , sender_name)
+            add_messages(bot_sent_res.id , msg.text , sender_id , sender_name)
             print("Bot sent hashtag triggered message successfully")
         else : 
             print(f"{msg.id} is older than last message id {lastMsgId}")
