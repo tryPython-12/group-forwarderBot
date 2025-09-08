@@ -45,5 +45,5 @@ def clear_messages () :
     for msgBody in msgList : 
         if(now - msgBody['timestamp']) >= expiryTime : 
             mssg_collection.delete_one({'timestamp' : msgBody['timestamp']})
-            print(f"Message id {msgBody['sent_msg_d']} deleted")
+            print(f"Message id {msgBody['sent_msg_id']} deleted")
     # save_messages(messages)

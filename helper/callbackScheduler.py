@@ -28,6 +28,8 @@ async def callbackHandler(event) :
                     f"<b>Name : <a href=\"tg://user?id={sender_id}\">{sender_name}</a></b>\n"
                     f"<b>user_id : {sender_id}</b\n" 
                 )
+        
+        print(f"Event data : {event.data}") #<----Debugging
         if event.data == b"approve" : 
             approved_text = f'<b>✅{org_sent_text}</b>\n\n{user_credits}'
             await callback_triggered_msg.edit(
