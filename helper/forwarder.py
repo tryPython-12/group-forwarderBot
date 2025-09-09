@@ -32,11 +32,11 @@ async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE)
         [
             InlineKeyboardButton(
             text= "✅ Accept" ,
-            callback_data=f"accept:{msg.id}"
+            callback_data='approve'
             ),
             InlineKeyboardButton(
             text= "🚫 Reject",
-            callback_data=f"reject:{msg.id}"
+            callback_data='reject'
             )
         ],
     ]
