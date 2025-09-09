@@ -13,9 +13,9 @@ async def button_callback(update : Update , context : ContextTypes.DEFAULT_TYPE)
     print(f"Callback data: {query.data}")
     # [action , msg_id] = query.data.split(':')
     # # convert id to a int 
-    org_msg_id = query.message.message_id
+    query_msg_id= query.message.message_id
     # print(org_msg_id)
-    org_sent_msg = mssg_collection.find_one({'sent_msg_id' : org_msg_id})
+    org_sent_msg = mssg_collection.find_one({'sent_msg_to_id' : query_msg_id})
     # <----debugging---->
     print(f"Original sent message : {org_sent_msg}")
 

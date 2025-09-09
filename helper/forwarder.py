@@ -7,23 +7,28 @@ from mssgStorage.msgstorageHandler import add_messages
 from db_gen import mssg_collection
 
 load_dotenv()
-
+source_chat_id = int(os.getenv('SOURCE_CHAT_ID'))
 dest_chat_id = int(os.getenv('DEST_CHAT_ID'))
 HASHTAG = os.getenv("HASHTAG")
 # lastMsgId = 2105
 
 async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE) :
-    msg = update.message
-    # sender details
-    sender = msg.from_user
+    msgUpdate = update.message
+    # <----debugging--->
+    print(f"Update message body : {msgUpdate}")
+    #update message's destination chat details
+    msg_updated_from_id = msgUpdate.id 
+    source_msg_link = str(source_chat_id)[4:]
 
+    # sender details
+    sender = msgUpdate.from_user
     sender_id = sender.id
     sender_name = f'{sender.first_name} {sender.last_name}'.replace('None','')
     # sender_username = {sender.username}
 
     # create formatted text to send
     formatted_mssg = (
-                f'<b>{msg.text}\n\n</b>'
+                f'<b>{msgUpdate.text}\n\n</b>'
                 f"<b>Sent By : \n</b>"
                 f"<b>Name : <a href=\"tg://user?id={sender.id}\">{sender_name}</a></b>\n"
                 f"<b>user_id : {sender_id}\n</b>" 
@@ -42,27 +47,29 @@ async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE)
         ],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    if not msg or not msg.text : 
+    if not msgUpdate or not msgUpdate.text : 
         return
-    if HASHTAG in msg.text : 
+    if HASHTAG in msgUpdate.text : 
         print("Hashtag found")
+
         #grabbing last stored message id from database
-        lastMsgId = mssg_collection.find_one(sort=[("_id",-1)])['sent_msg_id']
+        last_sent_msg = mssg_collection.find_one(sort=[("_id",-1)])
+        last_sent_msg_from_id = last_sent_msg['sent_msg_from_id'] if last_sent_msg else 0
         # # <--debugging---->
         # print(f'all messages : {lastMsg}')
 
-        if msg.id > lastMsgId : 
-            print(f"Last message (id : {lastMsgId} is older than new message id : {msg.id})")
+        if msg_updated_from_id > last_sent_msg_from_id : 
+            print(f"Last message (id : {last_sent_msg_from_id}) is older than new message (id : {msg_updated_from_id})")
             bot_sent_res = await context.bot.send_message(
                 chat_id= dest_chat_id ,
                 text= formatted_mssg ,
                 reply_markup=reply_markup,
                 parse_mode= ParseMode.HTML
             )
-            add_messages(bot_sent_res.id , msg.text , sender_id , sender_name)
+            add_messages(msg_updated_from_id,bot_sent_res.id , msgUpdate.text , sender_id , sender_name)
             print("Bot sent hashtag triggered message successfully")
         else : 
-            print(f"{msg.id} is older than last message id {lastMsgId}")
+            print(f"new message id {msg_updated_from_id} is older than last message id {last_sent_msg_from_id}")
     else : 
         print("No hashtag found")
     # print(f'update : {update}\nmsg : {msg}\n msg_id : {msg.id}')

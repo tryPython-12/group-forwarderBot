@@ -16,16 +16,17 @@ def save_messages(messages) :
     with open(pickleFIleAddress,'wb') as f :
         return pickle.dump(messages,f)
 
-def add_messages(sent_msg_id , original_text, sender_id , sender_name) : 
+def add_messages(sent_msg_from_id,sent_msg_to_id , original_text, sender_id , sender_name) : 
     messages = load_messages()
-    messages[sent_msg_id] = {
+    messages[sent_msg_to_id] = {
         "original_text" : original_text ,
         "sender_id" : sender_id ,
         "sender_name" : sender_name ,
         "timestamp" : time.time()
     }
     newData = {
-        "sent_msg_id" : sent_msg_id,
+        "sent_msg_from_id" : sent_msg_from_id,
+        "sent_msg_to_id" : sent_msg_to_id,
         "original_text" : original_text ,
         "sender_id" : sender_id ,
         "sender_name" : sender_name ,
