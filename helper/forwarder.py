@@ -4,12 +4,13 @@ from telegram.constants import ParseMode
 import os
 from dotenv import load_dotenv
 from mssgStorage.msgstorageHandler import add_messages
+from db_gen import mssg_collection
 
 load_dotenv()
 
 dest_chat_id = int(os.getenv('DEST_CHAT_ID'))
 HASHTAG = os.getenv("HASHTAG")
-lastMsgId = 2105
+# lastMsgId = 2105
 
 async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE) :
     msg = update.message
@@ -45,6 +46,11 @@ async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE)
         return
     if HASHTAG in msg.text : 
         print("Hashtag found")
+        #grabbing last stored message id from database
+        lastMsgId = mssg_collection.find_one(sort=[("_id",-1)])['sent_msg_id']
+        # # <--debugging---->
+        # print(f'all messages : {lastMsg}')
+
         if msg.id > lastMsgId : 
             bot_sent_res = await context.bot.send_message(
                 chat_id= dest_chat_id ,

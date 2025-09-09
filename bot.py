@@ -5,6 +5,7 @@ import asyncio
 from dotenv import load_dotenv
 from helper.forwarder import forward_hashtag_handler
 from helper.callbackEditor import callBackHandler
+from db_gen import mssg_collection
 
 load_dotenv()
 
