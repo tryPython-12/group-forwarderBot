@@ -52,6 +52,7 @@ async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE)
         # print(f'all messages : {lastMsg}')
 
         if msg.id > lastMsgId : 
+            print(f"Last message (id : {lastMsgId} is older than new message id : {msg.id})")
             bot_sent_res = await context.bot.send_message(
                 chat_id= dest_chat_id ,
                 text= formatted_mssg ,
