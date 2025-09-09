@@ -21,7 +21,7 @@ async def sender(msg,client,dest_entity) :
         try :
             #creating inline buttons for future admin actions
             buttons = [
-                [Button.inline("✅ Approve" , b'approve'),Button.inline("❌ Reject", b'reject')]
+                [Button.inline("✅ Approve" , 'approve'),Button.inline("❌ Reject", 'reject')]
             ]
 
             # Gathering all useful sender data
