@@ -21,6 +21,7 @@ async def callbackHandler(event) :
         org_sent_text = target_org_mssg["original_text"]
         sender_id = target_org_mssg["sender_id"]
         sender_name = target_org_mssg["sender_name"]
+        source_msg_link = target_org_mssg["source_msg_link"]
 
         #format the message
         user_credits = (
@@ -31,25 +32,52 @@ async def callbackHandler(event) :
         
         print(f"Event data : {event.data}") #<----Debugging
         if event.data == b"approve" : 
-            approved_text = f'<b>✅{org_sent_text}</b>\n\n{user_credits}'
+            approved_text = f'<b><i>🕑 Pending</i></b>\n\n<b>{org_sent_text}</b>\n\n{user_credits}'
             await callback_triggered_msg.edit(
                 text= approved_text ,
                 parse_mode = 'html',
                 buttons = [
-                    Button.inline("✅ Approved",b'approved')
-                ],
+                    [Button.inline("✅ Upload",'upload'), Button.inline("❌ Cancel","cancel")],
+                    [Button.url("🌐 Source Request Message", source_msg_link)]
+                ]
             )
-            await event.answer("✅ Request Accepted",alert = True)
+            await event.answer("✅ Request Approved",alert = True)
         elif event.data == b"reject" : 
             rejected_text = f"❌<b><s>{org_sent_text}</s></b>\n\n{user_credits}"
             await callback_triggered_msg.edit(
                 text= rejected_text,
                 parse_mode = 'html',
                 buttons = [
-                    [Button.inline("❌ Rejected",b'rejected')]
+                    [Button.inline("❌ Rejected",'rejected')],
+                    [Button.inline("🌐 Source Request Message", source_msg_link)]
                 ],
             )
             await event.answer('❌ Request Rejected',alert = True) 
+        elif event.data == b'upload' : 
+            approved_text = f'<b>✅ {org_sent_text}</b>\n\n{user_credits}'
+            await callback_triggered_msg.edit(
+                text= approved_text ,
+                parse_mode = 'html',
+                buttons = [
+                    [Button.inline("✅ Uploaded",'uploaded')],
+                    [Button.url("🌐 Source Request Message", source_msg_link)]
+                ]
+            )
+            await event.answer("✅ Request Uploaded",alert = True)
+        
+        elif event.data == b'cancel' : 
+            rejected_text = f"❌<b><s>{org_sent_text}</s></b>\n\n{user_credits}"
+            await callback_triggered_msg.edit(
+                text= rejected_text,
+                parse_mode = 'html',
+                buttons = [
+                    [Button.inline("❌ Upload Cancelled",'cancelled')],
+                    [Button.inline("🌐 Source Request Message", source_msg_link)]
+                ],
+            )
+            await event.answer('❌ Uploaded Cancelled',alert = True)
+        else : 
+            return
 
     else : 
         print("callback sent by non-admin")

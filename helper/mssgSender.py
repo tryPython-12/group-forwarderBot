@@ -6,6 +6,7 @@ import os
 
 load_dotenv()
 
+source_chat_id = int(os.getenv('SOURCE_CHAT_ID'))
 HASHTAG = os.getenv("HASHTAG")
 
 async def sender(msg,client,dest_entity) : 
@@ -18,10 +19,12 @@ async def sender(msg,client,dest_entity) :
 
     if HASHTAG in  msg.text : #take event action if incoming message has the HASHTAG
         print(f"✅ Hashtag {HASHTAG} found! Forwarding...")
+        source_msg_link = f"https://t.me/c/{str(source_chat_id)[4:]}/{msg.id}" 
         try :
             #creating inline buttons for future admin actions
             buttons = [
-                [Button.inline("✅ Approve" , 'approve'),Button.inline("❌ Reject", 'reject')]
+                [Button.inline("✅ Accept" , 'approve'),Button.inline("❌ Reject", 'reject')],
+                [Button.url("🌐 Source Request Message",source_msg_link)]
             ]
 
             # Gathering all useful sender data
@@ -54,7 +57,7 @@ async def sender(msg,client,dest_entity) :
                 parse_mode= 'html'
             )
             #storing all incoming message data to storage file
-            add_messages(msg.id,bot_sent_res.id , incoming_msg.text , sender_id , sender_name)
+            add_messages(msg.id,bot_sent_res.id , incoming_msg.text , sender_id , sender_name,source_msg_link)
 
             # print(f"sent forwarded request successfully : {bot_sent_res}") # <-- bot sending reponse debugging
 
