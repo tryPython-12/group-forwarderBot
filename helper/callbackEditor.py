@@ -25,6 +25,7 @@ async def button_callback(update : Update , context : ContextTypes.DEFAULT_TYPE)
     org_sent_text = org_sent_msg["original_text"]
     sender_id = org_sent_msg["sender_id"]
     sender_name = org_sent_msg["sender_name"]
+    source_msg_link = org_sent_msg['source_msg_link']
     user_credits = (
                         f"<b>Sent By :</b>\n"
                         f"<b>Name : <a href=\"tg://user?id={sender_id}\">{sender_name}</a></b>\n"
@@ -34,34 +35,79 @@ async def button_callback(update : Update , context : ContextTypes.DEFAULT_TYPE)
     # # bot editing logics
     # if not org_msg_id : 
     #     return
+
+
     if query.data == 'approve' : 
-        new_text = f'✅ {org_sent_text}\n\n{user_credits}'
+        new_text = f'<b><i>🕑 Pending</i></b>\n\n<b>{org_sent_text}</b>\n\n{user_credits}'
 
         # edit the callback triggered message
         await query.edit_message_text(
             text= new_text ,
             reply_markup= InlineKeyboardMarkup(
                 [
-                    [ 
-                        InlineKeyboardButton(text='✅ Upload',callback_data='accepted'),
-                        InlineKeyboardButton(text='❌ Reject', callback_data='Rejected')
+                    [
+                        InlineKeyboardButton(text='✅ Upload',callback_data='upload'),
+                        InlineKeyboardButton(text='❌ Cancel', callback_data='cancel')
+                    ],
+                    [
+                        InlineKeyboardButton(text= '🌐 Source Request Message' , url=source_msg_link)
                     ]
                 ]
             ),    
             parse_mode= ParseMode.HTML
         )
-        await query.answer('✅ Request Accepted', show_alert=True)
+        await query.answer('✅ Request Approved', show_alert=True)
     elif query.data == 'reject' : 
-        new_text = f'❌ <s>{org_sent_text}</s>\n\n{user_credits}'
+        new_text = f'❌ <s><b>{org_sent_text}</b></s>\n\n{user_credits}'
 
         # edit the callback triggered message
         await query.edit_message_text(
         text= new_text ,
         reply_markup = InlineKeyboardMarkup(
-            [[ InlineKeyboardButton(text='❌ Rejected',callback_data='rejected')]]
+            [
+                [ InlineKeyboardButton(text='❌ Rejected',callback_data='rejected')],
+                [InlineKeyboardButton(text='🌐 Source Request Message' , url=source_msg_link)]
+            ]
         ) ,
         parse_mode= ParseMode.HTML
         )
-        await query.answer('❌ Request Denied', show_alert= True)
+        await query.answer('❌ Request Rejected', show_alert= True)
+    
+    elif query.data == 'upload' : 
+        new_text = f'<b>✅ {org_sent_text}</b>\n\n{user_credits}'
+
+        # edit the callback triggered message
+        await query.edit_message_text(
+            text= new_text ,
+            reply_markup= InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(text='✅ Uploaded',callback_data='uploaded'),
+                    ],
+                    [
+                        InlineKeyboardButton(text= '🌐 Source Request Message' , url=source_msg_link)
+                    ]
+                ]
+            ),    
+            parse_mode= ParseMode.HTML
+        )
+        await query.answer('✅ Request Uploaded', show_alert=True)
+    elif query.data == 'cancel' : 
+        new_text = f'❌ <s><b>{org_sent_text}</b></s>\n\n{user_credits}'
+
+        # edit the callback triggered message
+        await query.edit_message_text(
+        text= new_text ,
+        reply_markup = InlineKeyboardMarkup(
+            [
+                [ InlineKeyboardButton(text='❌ Upload Cancelled',callback_data='cancelled')],
+                [InlineKeyboardButton(text='🌐 Source Request Message' , url=source_msg_link)]
+            ]
+        ) ,
+        parse_mode= ParseMode.HTML
+        )
+        await query.answer('❌ Upload Cancelled', show_alert= True)
+    else:
+        return
 
 callBackHandler = CallbackQueryHandler(button_callback)

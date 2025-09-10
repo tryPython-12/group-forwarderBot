@@ -18,7 +18,7 @@ async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE)
     print(f"Update message body : {msgUpdate}")
     #update message's destination chat details
     msg_updated_from_id = msgUpdate.id 
-    source_msg_link = str(source_chat_id)[4:]
+    source_msg_link = f"https://t.me/c/{str(source_chat_id)[4:]}/{msg_updated_from_id}" 
 
     # sender details
     sender = msgUpdate.from_user
@@ -45,6 +45,12 @@ async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE)
             callback_data='reject'
             )
         ],
+        [
+            InlineKeyboardButton(
+                text= "🌐 Source Request Message",
+                url= source_msg_link
+            )
+        ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     if not msgUpdate or not msgUpdate.text : 
@@ -66,7 +72,7 @@ async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE)
                 reply_markup=reply_markup,
                 parse_mode= ParseMode.HTML
             )
-            add_messages(msg_updated_from_id,bot_sent_res.id , msgUpdate.text , sender_id , sender_name)
+            add_messages(msg_updated_from_id,bot_sent_res.id , msgUpdate.text , sender_id , sender_name,source_msg_link)
             print("Bot sent hashtag triggered message successfully")
         else : 
             print(f"new message id {msg_updated_from_id} is older than last message id {last_sent_msg_from_id}")
