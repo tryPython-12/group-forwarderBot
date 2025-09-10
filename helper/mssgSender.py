@@ -17,7 +17,7 @@ async def sender(msg,client,dest_entity) :
     
     print(f"➡️ Incoming Message Text: { msg.text}")
 
-    if HASHTAG in  msg.text : #take event action if incoming message has the HASHTAG
+    if HASHTAG in  msg.text.lower() : #take event action if incoming message has the HASHTAG
         print(f"✅ Hashtag {HASHTAG} found! Forwarding...")
         source_msg_link = f"https://t.me/c/{str(source_chat_id)[4:]}/{msg.id}" 
         try :
