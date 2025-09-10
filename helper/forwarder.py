@@ -55,7 +55,7 @@ async def forward_hashtag(update : Update , context : ContextTypes.DEFAULT_TYPE)
     reply_markup = InlineKeyboardMarkup(keyboard)
     if not msgUpdate or not msgUpdate.text : 
         return
-    if HASHTAG in msgUpdate.text : 
+    if HASHTAG in msgUpdate.text.lower() : 
         print("Hashtag found")
 
         #grabbing last stored message id from database
