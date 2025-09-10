@@ -27,7 +27,7 @@ async def callbackHandler(event) :
         user_credits = (
                     f"<b>Sent By :</b>\n"
                     f"<b>Name : <a href=\"tg://user?id={sender_id}\">{sender_name}</a></b>\n"
-                    f"<b>user_id : {sender_id}</b\n" 
+                    f"<b>user_id : {sender_id}</b>" 
                 )
         
         print(f"Event data : {event.data}") #<----Debugging
