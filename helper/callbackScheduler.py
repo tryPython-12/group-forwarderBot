@@ -13,7 +13,7 @@ async def callbackHandler(event) :
     print('callback sent by id : ',callback_sender.id)
     print(f"The Callback triggered msg id : {callback_triggered_msg.id}")
     #fetch all messages from database
-    target_org_mssg = mssg_collection.find_one({'sent_msg_id' : callback_triggered_msg.id})
+    target_org_mssg = mssg_collection.find_one({'sent_msg_to_id' : callback_triggered_msg.id})
     if callback_sender.id == int(admin_id) : 
         print("callback sent by admin")
 

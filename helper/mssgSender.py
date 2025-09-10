@@ -54,7 +54,7 @@ async def sender(msg,client,dest_entity) :
                 parse_mode= 'html'
             )
             #storing all incoming message data to storage file
-            add_messages(bot_sent_res.id , incoming_msg.text , sender_id , sender_name)
+            add_messages(msg.id,bot_sent_res.id , incoming_msg.text , sender_id , sender_name)
 
             # print(f"sent forwarded request successfully : {bot_sent_res}") # <-- bot sending reponse debugging
 
