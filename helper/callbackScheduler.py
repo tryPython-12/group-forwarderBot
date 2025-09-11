@@ -49,7 +49,7 @@ async def callbackHandler(event) :
                 parse_mode = 'html',
                 buttons = [
                     [Button.inline("❌ Rejected",'rejected')],
-                    [Button.inline("🌐 Source Request Message", source_msg_link)]
+                    [Button.url("🌐 Source Request Message", source_msg_link)]
                 ],
             )
             await event.answer('❌ Request Rejected',alert = True) 
