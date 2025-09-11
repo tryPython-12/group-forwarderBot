@@ -72,7 +72,7 @@ async def callbackHandler(event) :
                 parse_mode = 'html',
                 buttons = [
                     [Button.inline("❌ Upload Cancelled",'cancelled')],
-                    [Button.inline("🌐 Source Request Message", source_msg_link)]
+                    [Button.url("🌐 Source Request Message", source_msg_link)]
                 ],
             )
             await event.answer('❌ Uploaded Cancelled',alert = True)
