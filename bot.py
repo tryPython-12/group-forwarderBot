@@ -56,10 +56,11 @@ app.include_router(app_routes.router)
 
 async def main():
     """Main async function to run both FastAPI and Telethon"""
+    
     config = uvicorn.Config(
         app=app,
         host="0.0.0.0",
-        port=8080,
+        port = int(os.environ.get("PORT", 8000)),
         loop="asyncio"
     )
     server = uvicorn.Server(config)
